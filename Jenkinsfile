@@ -5,7 +5,7 @@ pipeline {
     REGION        = 'southamerica-west1'
     REPO_NAME     = 'apps'
     SERVICE_NAME  = 'fastapi-demo'
-    PROJECT_ID    = 'durable-ring-471120-i8'
+    PROJECT_ID    = 'linear-time-471113-p5'
     REGISTRY_HOST = "${REGION}-docker.pkg.dev"
   }
 
