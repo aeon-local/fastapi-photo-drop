@@ -4,7 +4,7 @@ from app.gcs import upload_image_to_bucket
 app = FastAPI(title="Photo Drop", version="1.0.0")
 
 # Configuración del bucket (puedes usar una variable de entorno)
-BUCKET_NAME = "photo-drop-bucket"
+BUCKET_NAME = "photo-drop-bucket-la"
 
 @app.get("/")
 def root():
