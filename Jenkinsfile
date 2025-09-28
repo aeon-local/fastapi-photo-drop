@@ -7,7 +7,7 @@ pipeline {
     SERVICE_NAME  = 'fastapi-demo'
     PROJECT_ID    = 'linear-time-471113-p5'
     REGISTRY_HOST = "${REGION}-docker.pkg.dev"
-    SONAR_PROJECT_KEY = 'fastapi'
+    SONAR_PROJECT_KEY = 'fastapi'   // nombre del proyecto en SonarQube
   }
 
   options {
