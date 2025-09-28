@@ -7,6 +7,7 @@ pipeline {
     SERVICE_NAME  = 'fastapi-demo'
     PROJECT_ID    = 'linear-time-471113-p5'
     REGISTRY_HOST = "${REGION}-docker.pkg.dev"
+    SONAR_PROJECT_KEY = 'fastapi'
   }
 
   options {
@@ -17,6 +18,22 @@ pipeline {
     stage('Checkout') {
       steps {
         checkout scm
+      }
+    }
+
+    stage('SonarQube Analysis') {
+      steps {
+        withCredentials([string(credentialsId: 'sonarqube-token', variable: 'SONAR_TOKEN')]) {
+          withSonarQubeEnv('SonarQube') {
+            sh """
+              sonar-scanner \
+                -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
+                -Dsonar.sources=./app \
+                -Dsonar.host.url=$SONAR_HOST_URL \
+                -Dsonar.login=$SONAR_TOKEN
+            """
+          }
+        }
       }
     }
 
@@ -55,7 +72,7 @@ pipeline {
             --platform managed \
             --region ${REGION} \
             --allow-unauthenticated \
-            --port 8000
+            --port 8080
         '''
       }
     }
@@ -64,8 +81,8 @@ pipeline {
       steps {
         sh '''
           URL=$(gcloud run services describe ${SERVICE_NAME} --region=${REGION} --format='value(status.url)')
-          echo "Haciendo smoke test contra $URL/docs"
-          curl -fsS "$URL/docs" || exit 1
+          echo "Haciendo smoke test contra $URL/healthz"
+          curl -fsS "$URL/healthz" || exit 1
         '''
       }
     }
@@ -79,7 +96,7 @@ pipeline {
       }
     }
     failure {
-      echo '❌ Falló el pipeline. Revisa los logs (auth, permisos, build, deploy).'
+      echo '❌ Falló el pipeline. Revisa los logs (SonarQube, auth, build, deploy).'
     }
   }
 }
