@@ -7,7 +7,7 @@ pipeline {
     SERVICE_NAME  = 'fastapi-demo'
     PROJECT_ID    = 'linear-time-471113-p5'
     REGISTRY_HOST = "${REGION}-docker.pkg.dev"
-    SONAR_PROJECT_KEY = 'fastapi'   // nombre del proyecto en SonarQube
+    SONAR_PROJECT_KEY = 'fastapi'   // debe coincidir con tu proyecto en SonarQube
   }
 
   options {
@@ -26,7 +26,7 @@ pipeline {
         withCredentials([string(credentialsId: 'jenkins-token', variable: 'SONAR_TOKEN')]) {
           withSonarQubeEnv('SonarQube') {
             sh """
-              sonar-scanner \
+              /opt/sonar-scanner/bin/sonar-scanner \
                 -Dsonar.projectKey=${SONAR_PROJECT_KEY} \
                 -Dsonar.sources=./app \
                 -Dsonar.host.url=$SONAR_HOST_URL \
